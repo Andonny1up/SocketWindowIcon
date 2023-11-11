@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Moving Icon</title>
+  <style>
+    #icon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: transform 1s linear;
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <img id="icon" src="icon.png" alt="Moving Icon" />
+
+  <script>
+    const socket = new WebSocket('ws://localhost:8080');
+
+    socket.addEventListener('open', event => {
+      console.log('Conexión establecida con el servidor WebSocket');
+    });
+
+    socket.addEventListener('message', event => {
+      const { x, windowId } = JSON.parse(event.data);
+      const icon = document.getElementById('icon');
+
+      if (windowId === 0) {
+        icon.style.transform = `translateX(${x}px)`;
+      } else {
+        const windowWidth = window.innerWidth;
+        icon.style.transform = `translateX(${windowWidth - x - 200}px)`;
+      }
+    });
+
+    socket.addEventListener('close', event => {
+      console.log('Conexión cerrada con el servidor WebSocket');
+    });
+  </script>
+</body>
+</html>

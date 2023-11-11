@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bouncing Image</title>
+    <style>
+      #icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <img id="icon" src="icon.png" alt="Bouncing Icon" style="width: 200px;" />
+
+    <script>
+      const socket = new WebSocket('ws://localhost:8080');
+
+      socket.addEventListener('open', event => {
+        console.log('Conexión establecida con el servidor WebSocket');
+      });
+
+      socket.addEventListener('message', event => {
+        const { x, y } = JSON.parse(event.data);
+        const icon = document.getElementById('icon');
+        icon.style.top = y + 'px';
+        icon.style.left = x + 'px';
+      });
+
+      socket.addEventListener('close', event => {
+        console.log('Conexión cerrada con el servidor WebSocket');
+      });
+    </script>
+<!-- 6. Asegúrate de tener una imagen llamada `icon.png` en el mismo directorio que los archivos `server.js` e `index.html`.
+
+7. Inicia el servidor ejecutando el siguiente comando en tu terminal:
+
+```bash
+node server.js -->
